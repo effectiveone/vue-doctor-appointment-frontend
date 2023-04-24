@@ -10,7 +10,7 @@
 </ul>
 <h2>Images</h2>
 <div style="display: flex;">
-  <img src="/medicine1.png" alt="Medicine 1" width="300px">
-  <img src="/medicine2.png" alt="Medicine 2" width="300px">
+  <img src="/public/medicine1.png" alt="Medicine 1" width="300px">
+  <img src="/public/medicine2.png" alt="Medicine 2" width="300px">
 </div>
 <p>Note that the images are located in the "public" folder of the project, and you can refer to them using a relative path starting with a forward slash ("/").</p>

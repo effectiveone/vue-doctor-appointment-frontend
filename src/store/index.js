@@ -1,5 +1,4 @@
 import { createStore } from 'vuex';
-
 import doctorsModule from './modules/doctors/index.js';
 import authModule from './modules/auth/index.js';
 

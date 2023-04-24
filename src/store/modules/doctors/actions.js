@@ -3,7 +3,7 @@ import axios from 'axios';
 export default {
   async fetchAllDoctors({ commit }) {
     const response = await axios.get(
-      'http://localhost:5002/api/app/get-all-doctors'
+      'http://localhost:5002/api/doc/get-all-doctors'
     );
     const responseData = response.data;
 
@@ -19,10 +19,10 @@ export default {
 
   async updateAppointment({ commit }, payload) {
     const token = localStorage.getItem('token');
-
+    console.log('update', payload);
     try {
       const response = await axios.put(
-        `http://localhost:5002/api/app/${payload.id}/appointments`,
+        `http://localhost:5002/api/app/appointments/${payload.id}`,
         payload.data,
         {
           headers: {
@@ -33,7 +33,7 @@ export default {
 
       const responseData = response.data;
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         const error = new Error(
           responseData.message || 'Failed to update appointment.'
         );
@@ -49,11 +49,34 @@ export default {
 
   async fetchAppointmentsByDoctorId({ commit }, payload) {
     const response = await axios.get(
-      `http://localhost:5002/api/app/${payload.id}/appointments`
+      `http://localhost:5002/api/app/appointments/${payload.id}`
     );
     const responseData = response.data;
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
+      const error = new Error(
+        responseData.message || 'Failed to fetch appointments by doctor id.'
+      );
+      throw error;
+    }
+
+    commit('setAppointments', responseData.data);
+  },
+
+  async fetchAppointmentsByUserId({ commit }, payload) {
+    const token = localStorage.getItem('token');
+
+    const response = await axios.get(
+      `http://localhost:5002/api/app/appointments`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const responseData = response.data;
+
+    if (response.status < 200 || response.status >= 300) {
       const error = new Error(
         responseData.message || 'Failed to fetch appointments by doctor id.'
       );
@@ -66,12 +89,13 @@ export default {
   async fetchDoctorById({ commit }, payload) {
     console.log('payload', payload);
     const response = await axios.post(
-      `http://localhost:5002/api/app/${payload}/profile`
+      `http://localhost:5002/api/doc/${payload}/profile`
     );
     const responseData = response.data;
 
     console.log('responseData', responseData);
-    // if (!response.ok) {
+    // if (response.status < 200 || response.status >= 300) {
+
     //   const error = new Error(
     //     responseData.message || 'Failed to fetch doctor by id.'
     //   );
@@ -84,7 +108,7 @@ export default {
   async updateDoctorProfile({ commit }, payload) {
     const token = localStorage.getItem('token');
     const response = await axios.put(
-      'http://localhost:5002/api/app/profile',
+      'http://localhost:5002/api/doc/profile',
       payload,
       {
         headers: {
@@ -94,7 +118,7 @@ export default {
     );
     const responseData = response.data;
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
       const error = new Error(
         responseData.message || 'Failed to update doctor profile.'
       );
@@ -114,7 +138,7 @@ export default {
 
     const responseData = response.data;
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
       const error = new Error(
         responseData.message || 'Failed to update appointment status.'
       );

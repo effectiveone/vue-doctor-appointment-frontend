@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <h1>Doctor Form</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else>
+    <div >
       <h2>{{ doctor.firstName }} {{ doctor.lastName }}</h2>
       <form @submit.prevent="save">
         <div>
@@ -35,7 +34,7 @@
         </div>
         <div>
           <label for="feePerConsultation">Fee per consultation:</label>
-          <input type="number" id="feePerConsultation" :value="doctor?.feePerConsultation" @input="(event) => doctor.feePerConsultation = event.target.value" required>
+          <input type="number" id="feePerConsultation" :value="doctor && doctor.feePerConsultation && doctor.$numberDecimal.$numberDecimal" @input="(event) => doctor.feePerConsultation = event.target.value" required>
         </div>
         <button type="submit">Save</button>
       </form>
@@ -44,11 +43,7 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      loading: true,
-    };
-  },
+  
 
   created() {
     this.fetchDoctor();
@@ -57,7 +52,7 @@ export default {
   methods: {
     async fetchDoctor() {
       try {
-        await this.$store.dispatch('fetchDoctorById',  this.$store.getters.userId
+        await this.$store.dispatch('doctors/fetchDoctorById',  this.$store.getters.userId
         )
         this.loading = false;
       } catch (error) {
@@ -68,7 +63,7 @@ export default {
 
     async save() {
       try {
-        await this.$store.dispatch('updateDoctorProfile', this.doctor);
+        await this.$store.dispatch('doctors/updateDoctorProfile', this.doctor);
       } catch (error) {
         console.log(error);
       }
@@ -77,7 +72,7 @@ export default {
   
   computed: {
     doctor() {
-      return this.$store.getters.currentDoctor || {};
+      return this.$store.state.doctors.currentDoctor || {};
     }
   }
 };

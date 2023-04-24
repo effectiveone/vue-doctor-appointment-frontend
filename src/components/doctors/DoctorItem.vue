@@ -2,7 +2,7 @@
   <li>
     <h3>{{ firstName }} {{ lastName }}</h3>
     <span>Experience: {{experience}}</span>
-    <span>{{feePerCunsultation}} / per visit</span>
+    <span>{{feePerCunsultation.$numberDecimal}} / per visit</span>
     <div v-if="specialization">
   <base-badge type="primary" :title="specialization"></base-badge>
 </div>

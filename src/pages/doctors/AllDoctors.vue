@@ -51,9 +51,9 @@ export default {
         doctors = doctors.filter((doctor) => doctor.specialization.toLowerCase().includes(specialization.toLowerCase()));
       }
       if (sortOrder === 'asc') {
-        doctors = doctors.sort((a, b) => a.rate - b.rate);
+        doctors = doctors.sort((a, b) => a.feePerCunsultation.$numberDecimal - b.feePerCunsultation.$numberDecimal);
       } else if (sortOrder === 'desc') {
-        doctors = doctors.sort((a, b) => b.rate - a.rate);
+        doctors = doctors.sort((a, b) => b.feePerCunsultation.$numberDecimal - a.feePerCunsultation.$numberDecimal);
       }
       return doctors;
     },
@@ -72,7 +72,7 @@ export default {
     async fetchDoctors() {
       this.isLoading = true;
       try {
-        await this.$store.dispatch('fetchAllDoctors');
+        await this.$store.dispatch('doctors/fetchAllDoctors');
       } catch (error) {
         this.error = error.message || 'Something went wrong!';
       }

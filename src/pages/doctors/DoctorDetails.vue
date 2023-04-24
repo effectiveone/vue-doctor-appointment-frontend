@@ -61,11 +61,11 @@ export default {
       return this.doctor?.experience;
     },
     feePerCunsultation() {
-      return this.doctor?.feePerCunsultation;
+      return this.doctor?.feePerCunsultation.$numberDecimal;
     },
   },
   created() {
-  this.$store.dispatch('fetchDoctorById', this.$route.params.id)
+  this.$store.dispatch('doctors/fetchDoctorById', this.$route.params.id)
     .then(() => {
       console.log(this.doctor); // wyświetla obiekt Doctor w konsoli
     });

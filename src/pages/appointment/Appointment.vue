@@ -15,34 +15,39 @@
           <button
             v-for="hour in hours"
             :key="hour"
-            :class="{'selected': isSelected(day.date, hour)}"
-            @click="toggleSelection(day.date, hour)"
-          >
+            :class="{ 'selected': isSelected(day.date, hour) }"
+            @click="openDialog({ day: day.date, hour })"
+   >
             {{ hour }}:00
           </button>
         </div>
       </div>
     </div>
-    <div class="selected-hours">
-      <h3>Wybrane godziny:</h3>
-      <ul>
-        <li v-for="(hour, index) in selectedHours" :key="index">
-          {{ hour.day }} {{ hour.hour }}:00
-        </li>
-      </ul>
-    </div>
+    <confirmation-dialog
+      v-if="isDialogVisible"
+      :hour="selectedHour"
+      @close="isDialogVisible = false"
+      @confirm="confirmReservation"
+    ></confirmation-dialog>
   </div>
 </template>
 
+
 <script>
+import ConfirmationDialog from "@/components/appointments/ConfirmationDialog.vue";
 export default {
+  components: {
+    ConfirmationDialog,
+  },
   data() {
     return {
       startDate: new Date(2023, 0, 1),
       currentWeek: {},
       hours: Array.from({ length: 24 }, (_, i) => i),
       selectedHours: [],
-      daysOfWeek: ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"]
+      daysOfWeek: ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"],
+      isDialogVisible: false,
+      selectedHour: null,
     };
   },
   created() {
@@ -52,6 +57,15 @@ export default {
     this.scrollToHour(8);
   },
   methods: {
+    openDialog(hour) {
+      this.selectedHour = hour;
+      this.isDialogVisible = true;
+    },
+    confirmReservation() {
+      // Dodaj logikę potwierdzenia rezerwacji
+      this.toggleSelection(this.selectedHour.day, this.selectedHour.hour);
+      this.isDialogVisible = false;
+    },
     toggleSelection(day, hour) {
       const index = this.selectedHours.findIndex(
         selectedHour => selectedHour.day === day && selectedHour.hour === hour
@@ -114,6 +128,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  position: relative
 }
 
 .controls {
